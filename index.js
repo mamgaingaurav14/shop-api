@@ -19,7 +19,7 @@ app.use('/api/products', productRoutes);
 const PORT=process.env.PORT;
 
 app.get('/',(req,res)=>{
-    res.send('Shop Api running sir ');
+    res.send('Shop Api backend is running ,please test the server by third party api calls');
 
 })
 
