@@ -3,6 +3,8 @@ const mongoose=require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
+const productRoutes = require('./routes/productRoutes');
+
 
 
 
@@ -12,6 +14,7 @@ const app=express();
 app.use(cors());
 app.use(express.json());
 app.use('/api/auth', authRoutes);
+app.use('/api/products', productRoutes);
 
 const PORT=process.env.PORT;
 
@@ -35,3 +38,12 @@ const startServer= async()=>{
 
 };
 startServer();
+
+app.use((err, req, res, next) => {
+    console.error('Global Error:', err.stack);
+  
+    res.status(err.statusCode || 500).json({
+      success: false,
+      message: err.message || 'Something went wrong!',
+    });
+  });
