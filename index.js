@@ -38,12 +38,11 @@ const startServer= async()=>{
 
 };
 startServer();
-
 app.use((err, req, res, next) => {
-    console.error('Global Error:', err.stack);
+    console.error('Error:', err.message);
   
-    res.status(err.statusCode || 500).json({
-      success: false,
+    res.status(500).json({
       message: err.message || 'Something went wrong!',
     });
   });
+  
