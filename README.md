@@ -3,7 +3,23 @@
 A clean and scalable Node.js + Express + MongoDB backend for an online shop.
 Supports user registration/login, JWT authentication, role-based access (user/admin), and product CRUD operations. Easily testable via Postman.
 
+
 ---
+
+The testing api is live at https://shop-api-3ekh.onrender.com/
+You can directly test the api endpoints by either signup using any new credentials and or you can use testing credentials from below.
+
+
+## 👥 Sample Users
+
+| Role  | Email                                           | Password |
+| ----- | ----------------------------------------------- | -------- |
+|Admin 1| [gaurav@example.com](mailto:gaurav@example.com) | secret123   |
+| Admin 2  | [admin@example.com](mailto:user@example.com)     | 12345  |
+| User  | [user@example.com](mailto:user@example.com)     | 1234   |
+
+---
+
 
 ## Features
 
@@ -84,17 +100,7 @@ You can use Postman (or any API client) to test the endpoints.
 Authorization: Bearer <your_token>
 ```
 
----
 
-## 👥 Sample Users
-
-| Role  | Email                                           | Password |
-| ----- | ----------------------------------------------- | -------- |
-|Admin 1| [gaurav@example.com](mailto:gaurav@example.com) | secret123   |
-| Admin 2  | [admin@example.com](mailto:user@example.com)     | 12345  |
-| User  | [user@example.com](mailto:user@example.com)     | 1234   |
-
----
 
 ## 📦 Sample Products
 
@@ -125,6 +131,7 @@ shop-api/
 ├── routes/
 ├── utils/
 ├── .env
+├── public/index.html
 ├── index.js
 ```
 
