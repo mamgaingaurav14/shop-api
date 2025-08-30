@@ -2,9 +2,10 @@ const express =require('express');
 const mongoose=require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const path=require('path');
+
 const authRoutes = require('./routes/authRoutes');
 const productRoutes = require('./routes/productRoutes');
-
 
 
 
@@ -18,9 +19,10 @@ app.use('/api/products', productRoutes);
 
 const PORT=process.env.PORT;
 
-app.get('/',(req,res)=>{
-    res.send('Shop Api backend is running ,please test the server by third party api calls');
+app.use(express.static(path.join(__dirname, 'public')));
 
+app.get('/',(req,res)=>{
+   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 })
 
 const startServer= async()=>{
@@ -28,15 +30,16 @@ const startServer= async()=>{
     await mongoose.connect(process.env.MONGO_URI);
     console.log("MONGO DB Connected");
     app.listen(PORT, () => {
-        console.log("port no 3000 running sir");
+        console.log("port no 3000 running ");
       });
    }
    catch(err){
     console.error("failed")
     process.exit(1);//exit with failure 
    }
-
 };
+
+
 startServer();
 app.use((err, req, res, next) => {
     console.error('Error:', err.message);

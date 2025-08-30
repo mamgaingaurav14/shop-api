@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop-Api Demo</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    input, button { margin: 5px 0; padding: 8px; width: 100%; }
+    .container { max-width: 400px; margin: auto; }
+    .hidden { display: none; }
+    h2 { color: #090b0c; }
+    .box { border: 1px solid #ccc; padding: 15px; border-radius: 8px; margin-top: 15px; }
+    .fixed-left-box {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 10px;
+      background: #f9f9f9;
+      border: 1px solid #ccc;
+    }
+    .fixed-right-box {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 10px;
+      background: #f9f9f9;
+      border: 1px solid #ccc;
+      width: 300px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Shop-API Demo</h2>
+
+    <div class="fixed-left-box">
+      <h3>Testing Credentials</h3>
+      <pre>
+Admin 1:
+{
+  "email": "gaurav@example.com",
+  "password": "secret123"
+}
+
+Admin 2:
+{
+  "email": "admin@example.com",
+  "password": "12345"
+}
+
+User :
+{
+  "email": "user@example.com",
+  "password": "1234"
+}
+      </pre>
+    </div>
+
+    <!-- Sign Up Section -->
+    <div id="signupBox" class="box">
+      <h3>Sign Up</h3>
+      <input type="text" id="name" placeholder="Name">
+      <input type="email" id="email"  placeholder="Email">
+      <input type="password" id="password" placeholder="Password">
+      <button onclick="signUp()">Sign Up</button>
+    </div>
+
+    <!-- Sign In Section -->
+    <div id="signinBox" class="box">
+      <h3>Sign In</h3>
+      <input type="email" id="signinEmail" placeholder="Email">
+      <input type="password" id="signinPassword" placeholder="Password">
+      <button onclick="signIn()">Sign In</button>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="fixed-right-box hidden">
+      <h3>Dashboard</h3>
+      
+      <!-- Show Products Section -->
+      <h4>Show Products</h4>
+      <button onclick="showAllProducts()">Show All Products</button>
+      <div id="productList"></div>
+      
+      <!-- Create Product Section (Admin Only) -->
+      <br>
+      <input type="text" id="productName" placeholder="Product Name">
+      <input type="number" id="productPrice" placeholder="Price">
+      <input type="text" id="productDesc" placeholder="Description">
+      <button onclick="createProduct()">Create Product (Admin only )</button>
+      <p id="createStatus"></p>
+    </div>
+
+    <script>
+      const API_URL = "https://shop-api-3ekh.onrender.com"
+      let token = "";
+      
+      // Sign Up (Register)
+      async function signUp() {
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+      
+        const res = await fetch(`${API_URL}/api/auth/register`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, password })
+        });
+      
+        const data = await res.json();
+        alert(data.message || "Sign Up Successful!");
+      }
+      
+      // Sign In (Login)
+      async function signIn() {
+        const email = document.getElementById("signinEmail").value;
+        const password = document.getElementById("signinPassword").value;
+      
+        const res = await fetch(`${API_URL}/api/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+      
+        const data = await res.json();
+        if (data.token) {
+          token = data.token;
+          alert("Login Successful!");
+          document.getElementById("dashboard").classList.remove("hidden");
+        } else {
+          alert(data.message || "Login Failed!");
+        }
+      }
+      
+      // Show All Products
+      async function showAllProducts() {
+        try {
+          const res = await fetch(`${API_URL}/api/products`);
+          const products = await res.json();
+          document.getElementById('productList').innerHTML = 
+            products.map(p => `<p><b>${p.name}</b> - ₹${p.price}</p>`).join('');
+        } catch (err) {
+          console.error(err);
+          alert("Unable to fetch products.");
+        }
+      }
+
+      // Create Product (Admin Only)
+      async function createProduct() {
+        const name = document.getElementById('productName').value;
+        const price = document.getElementById('productPrice').value;
+        const description = document.getElementById('productDesc').value;
+      
+        try {
+          const res = await fetch(`${API_URL}/api/products`, {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ name, price, description })
+          });
+          const data = await res.json();
+          document.getElementById('createStatus').innerText = data.message || "Product Created!";
+        } catch (err) {
+          console.error(err);
+          alert("Unable to create product.");
+        }
+      }
+    </script>
+</body>
+</html>
